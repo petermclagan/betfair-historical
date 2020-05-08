@@ -1,0 +1,151 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "http://json-schema.org/draft-07/schema#",
+	"title": "The full json of an entry of data.",
+	"type": "object",
+	"required": ["mc", "op", "pt"],
+	"properties": {
+		"pt": {
+			"type": "integer"
+		},
+		"op": {
+			"type": "string",
+			"enum": ["mcm"]
+		},
+		"mc": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": ["id"],
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"marketDefinition": {
+						"type": "object",
+						"properties": {
+							"betDelay": {
+								"type": "integer"
+							},
+							"bettingType": {
+								"type": "string"
+							},
+							"bspMarket": {
+								"type": "boolean"
+							},
+							"bspReconciled": {
+								"type": "boolean"
+							},
+							"complete": {
+								"type": "boolean"
+							},
+							"countryCode": {
+								"type": "string"
+							},
+							"crossMatching": {
+								"type": "boolean"
+							},
+							"discountAllowed": {
+								"type": "boolean"
+							},
+							"eventId": {
+								"type": "string"
+							},
+							"eventName": {
+								"type": "string"
+							},
+							"eventTypeId": {
+								"type": "string"
+							},
+							"inPlay": {
+								"type": "boolean"
+							},
+							"marketBaseRate": {
+								"type": "number"
+							},
+							"marketTime": {
+								"type": "string"
+							},
+							"marketType": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							},
+							"numberOfActiveRunners": {
+								"type": "integer"
+							},
+							"numberOfWinners": {
+								"type": "integer"
+							},
+							"openDate": {
+								"type": "string"
+							},
+							"persistenceEnabled": {
+								"type": "boolean"
+							},
+							"regulators": {
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							},
+							"runners": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "integer"
+										},
+										"name": {
+											"type": "string"
+										},
+										"status": {
+											"type": "string"
+										},
+										"sortPriority": {
+											"type": "integer"
+										}
+									}
+								}
+							},
+							"runnersVoidable": {
+								"type": "boolean"
+							},
+							"status": {
+								"type": "string"
+							},
+							"suspendTime": {
+								"type": "string"
+							},
+							"timezone": {
+								"type": "string"
+							},
+							"turnInPlayEnabled": {
+								"type": "boolean"
+							},
+							"version": {
+								"type": "integer"
+							}
+						}
+					},
+					"rc": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"type": "integer"
+								},
+								"ltp": {
+									"type": "number"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
