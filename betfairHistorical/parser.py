@@ -1,6 +1,7 @@
 import bz2
 import json
 import os
+import pkg_resources
 from typing import Dict, List, Union
 
 import jsonschema
@@ -46,13 +47,13 @@ class BetfairHistoricalFileParser:
 			raise FileExistsError('File path does not exist')
 
 		if not self.sport in SUPPORTED_MARKETS.keys() and self.validate:
-			raise NotImplemented(f'{self.sport} not currently implemented.')
+			raise NotImplementedError(f'{self.sport} not currently implemented.')
 
 		if not self.plan in SUPPORTED_PLANS and self.validate:
-			raise NotImplemented(f'{self.plan} not currently implemented')
+			raise NotImplementedError(f'{self.plan} not currently implemented')
 
 		if not self.market in SUPPORTED_MARKETS[self.sport] and self.validate:
-			raise NotImplemented(f'{self.market} not currently implemented')
+			raise NotImplementedError(f'{self.market} not currently implemented')
 
 		if os.path.isdir(self.local_path):
 			self.data = self._read_files()
@@ -82,23 +83,27 @@ class BetfairHistoricalFileParser:
 		else:
 			return [self._read_file(os.path.join(self.local_path, f)) for f in os.listdir(self.local_path)]
 
-
 	def _validate_schema(self, contents: bytes):
 		"""
 		Used to validate the bytes content of the bz2 files against a jsonschema object.
 		The jsonschema can either be set in the class init, or placed in the validation_schemas folder.
 		"""
-		default_schema = os.path.join('validation_schemas', self.sport, f'{self.market}.json')
-		default_schema_path = os.path.relpath(os.path.join('.', default_schema))
+		default_schema = f"validation_schemas/{self.sport}/{self.market}.json"
+		default_schema_path = pkg_resources.resource_filename(__name__, default_schema)
+		# default_schema = os.path.join('validation_schemas', self.sport, f'{self.market}.json')
+		# default_schema_path = os.path.relpath(os.path.join('.', default_schema))
 		if self.validation_schema:
-			schema = self.schema
+			schema = self.validation_schema
 		elif os.path.exists(default_schema_path):
 			with open(default_schema_path) as schema_json:
 				schema = json.load(schema_json)
 		else:
 			raise NoValidationSchema("No validation schema available in defaults or provided.")
-			for _line in _data:
-				jsonschema.validate(instance=json.loads(_line.decode()), schema=schema)
+		for _line in contents:
+			if not isinstance(_line, bytes):
+				print(_line)
+				exit(1)
+			jsonschema.validate(instance=json.loads(_line), schema=schema)
 		return
 
 	def get_market_change_id(sef, market_change: Dict) -> str:
@@ -108,7 +113,7 @@ class BetfairHistoricalFileParser:
 		"""
 		market_change_id = market_change.get('id')
 		if not market_change_id:
-			raise InvalidMarketChange("Matket change has no valid id key.")
+			raise InvalidMarketChange("Market change has no valid id key.")
 		return str(market_change_id)
 
 
@@ -135,27 +140,3 @@ class BetfairHistoricalFileParser:
 		if not published_time:
 			raise InvalidMarket("No published time available.")
 		return published_time
-
-
-if __name__ == '__main__':	
-
-	from pprint import pprint
-
-	p = BetfairHistoricalFileParser(
-		local_path='data',
-		sport='soccer',
-		plan='basic',
-		market='match_odds',
-		recursive=True)
-
-	for events in p.data:
-		for event in events:
-			market = json.loads(event.decode())
-			
-			for market_change in market.get('mc'):
-				
-				marketDefinition = p.get_market_definition(market_change)
-				runnerChange = p.get_runner_change(market_change)
-
-				if runnerChange:
-					print(runnerChange)
