@@ -15,3 +15,9 @@ These tests can be run using the command:
 ```bash
 pytest test_downloader.py [-s]
 ```
+
+## Parser
+These tests should all run without any setup, with the command:
+```bash
+pytest test_parser.py [-s]
+```
