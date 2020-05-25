@@ -90,8 +90,6 @@ class BetfairHistoricalFileParser:
 		"""
 		default_schema = f"validation_schemas/{self.sport}/{self.market}.json"
 		default_schema_path = pkg_resources.resource_filename(__name__, default_schema)
-		# default_schema = os.path.join('validation_schemas', self.sport, f'{self.market}.json')
-		# default_schema_path = os.path.relpath(os.path.join('.', default_schema))
 		if self.validation_schema:
 			schema = self.validation_schema
 		elif os.path.exists(default_schema_path):
@@ -101,8 +99,6 @@ class BetfairHistoricalFileParser:
 			raise NoValidationSchema("No validation schema available in defaults or provided.")
 		for _line in contents:
 			if not isinstance(_line, bytes):
-				print(_line)
-				exit(1)
 			jsonschema.validate(instance=json.loads(_line), schema=schema)
 		return
 
