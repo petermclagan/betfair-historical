@@ -98,7 +98,6 @@ class BetfairHistoricalFileParser:
 		else:
 			raise NoValidationSchema("No validation schema available in defaults or provided.")
 		for _line in contents:
-			if not isinstance(_line, bytes):
 			jsonschema.validate(instance=json.loads(_line), schema=schema)
 		return
 
